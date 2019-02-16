@@ -11,17 +11,8 @@
 #include <queue>
 #include <mutex>
 #include <condition_variable>
-#include <functional>
 
-// make_unique is not available in C++11
-// Taken from Herb Sutter's blog (https://herbsutter.com/gotw/_102/)
-template<typename T, typename ...Args>
-std::unique_ptr<T> make_unique(Args&& ...args)
-{
-	return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
-}
-
-namespace vks
+namespace vkTools
 {
 	class Thread
 	{
@@ -104,7 +95,7 @@ namespace vks
 			threads.clear();
 			for (auto i = 0; i < count; i++)
 			{
-				threads.push_back(make_unique<Thread>());
+				threads.push_back(std::make_unique<Thread>());
 			}
 		}
 

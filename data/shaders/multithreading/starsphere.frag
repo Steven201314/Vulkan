@@ -1,5 +1,8 @@
 #version 450
 
+#extension GL_ARB_separate_shader_objects : enable
+#extension GL_ARB_shading_language_420pack : enable
+
 layout (location = 0) in vec3 inUVW;
 
 layout (location = 0) out vec4 outFragColor;
@@ -11,11 +14,11 @@ layout (location = 0) out vec4 outFragColor;
 float hash33(vec3 p3)
 {
 	p3 = fract(p3 * HASHSCALE3);
-    p3 += dot(p3, p3.yxz+vec3(19.19));
-    return fract((p3.x + p3.y)*p3.z + (p3.x+p3.z)*p3.y + (p3.y+p3.z)*p3.x);
+    p3 += dot(p3, p3.yxz+19.19);
+    return fract(vec3((p3.x + p3.y)*p3.z + (p3.x+p3.z)*p3.y + (p3.y+p3.z)*p3.x));
 }
 
-vec3 starField(vec3 pos)
+float starField(vec3 pos)
 {
 	vec3 color = vec3(0.0);
     float threshhold = (1.0 - STARFREQUENCY);
