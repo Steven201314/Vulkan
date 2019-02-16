@@ -1,8 +1,5 @@
 #version 450
 
-#extension GL_ARB_separate_shader_objects : enable
-#extension GL_ARB_shading_language_420pack : enable
-
 layout (location = 0) in vec3 inPos;
 layout (location = 1) in vec3 inNormal;
 layout (location = 2) in vec2 inUV;
@@ -40,14 +37,13 @@ void main()
 	boneTransform     += ubo.bones[inBoneIDs[2]] * inBoneWeights[2];
 	boneTransform     += ubo.bones[inBoneIDs[3]] * inBoneWeights[3];	
 
-	outNormal = inNormal;
 	outColor = inColor;
 	outUV = inUV;
 
 	gl_Position = ubo.projection * ubo.view * ubo.model * boneTransform * vec4(inPos.xyz, 1.0);
 
 	vec4 pos = ubo.model * vec4(inPos, 1.0);
-	outNormal = mat3(inverse(transpose(ubo.model))) * inNormal;
+	outNormal = mat3(inverse(transpose(ubo.model * boneTransform))) * inNormal;
 	outLightVec = ubo.lightPos.xyz - pos.xyz;
 	outViewVec = ubo.viewPos.xyz - pos.xyz;		
 }
